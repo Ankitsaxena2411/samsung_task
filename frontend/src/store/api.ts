@@ -4,7 +4,7 @@ import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
 export const taskApi = createApi({
   reducerPath: 'taskApi',
   baseQuery: graphqlRequestBaseQuery({
-    url: 'http://localhost:3000/graphql',
+    url: 'http://localhost:4000/graphql',
   }),
   tagTypes: ['Task'],
   endpoints: (builder) => ({

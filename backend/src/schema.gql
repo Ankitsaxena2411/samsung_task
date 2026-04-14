@@ -2,6 +2,39 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  status: TaskStatus!
+  createdAt: String!
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
 type Query {
-  hello: String!
+  tasks(status: TaskStatus): [Task!]!
+  task(id: String!): Task!
+}
+
+type Mutation {
+  createTask(createTaskInput: CreateTaskInput!): Task!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  deleteTask(id: String!): Boolean!
+}
+
+input CreateTaskInput {
+  title: String!
+  description: String
+}
+
+input UpdateTaskInput {
+  title: String
+  description: String
+  id: ID!
+  status: TaskStatus
 }

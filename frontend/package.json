@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
+    "@rtk-query/graphql-request-base-query": "^2.3.2",
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
     "lucide-react": "^1.8.0",
