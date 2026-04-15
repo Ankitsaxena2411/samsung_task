@@ -1,14 +1,31 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
+import type { Task } from "./uiSlice";
+
+interface GetTasksResponse {
+  tasks: Task[];
+}
+
+interface CreateTaskResponse {
+  createTask: Omit<Task, "createdAt">;
+}
+
+interface UpdateTaskResponse {
+  updateTask: Task;
+}
+
+interface DeleteTaskResponse {
+  deleteTask: boolean;
+}
 
 export const taskApi = createApi({
-  reducerPath: 'taskApi',
+  reducerPath: "taskApi",
   baseQuery: graphqlRequestBaseQuery({
-    url: 'http://localhost:4000/graphql',
+    url: "http://localhost:4000/graphql",
   }),
-  tagTypes: ['Task'],
+  tagTypes: ["Task"],
   endpoints: (builder) => ({
-    getTasks: builder.query<any, { status?: string }>({
+    getTasks: builder.query<GetTasksResponse, { status?: string }>({
       query: (variables) => ({
         document: `
           query GetTasks($status: TaskStatus) {
@@ -26,12 +43,19 @@ export const taskApi = createApi({
       providesTags: (result) =>
         result && result.tasks
           ? [
-              ...result.tasks.map(({ id }: { id: string }) => ({ type: 'Task' as const, id })),
-              { type: 'Task', id: 'LIST' },
+              ...result.tasks.map(({ id }) => ({ type: "Task" as const, id })),
+              { type: "Task", id: "LIST" },
             ]
-          : [{ type: 'Task', id: 'LIST' }],
+          : [{ type: "Task", id: "LIST" }],
     }),
-    createTask: builder.mutation<any, { title: string; description?: string }>({
+    createTask: builder.mutation<
+      CreateTaskResponse,
+      {
+        title: string;
+        description?: string;
+        status?: "TODO" | "IN_PROGRESS" | "DONE";
+      }
+    >({
       query: (variables) => ({
         document: `
           mutation CreateTask($createTaskInput: CreateTaskInput!) {
@@ -45,9 +69,12 @@ export const taskApi = createApi({
         `,
         variables: { createTaskInput: variables },
       }),
-      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
+      invalidatesTags: [{ type: "Task", id: "LIST" }],
     }),
-    updateTask: builder.mutation<any, { id: string; status?: string; title?: string; description?: string }>({
+    updateTask: builder.mutation<
+      UpdateTaskResponse,
+      { id: string; status?: string; title?: string; description?: string }
+    >({
       query: (variables) => ({
         document: `
           mutation UpdateTask($updateTaskInput: UpdateTaskInput!) {
@@ -61,18 +88,21 @@ export const taskApi = createApi({
         `,
         variables: { updateTaskInput: variables },
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Task', id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Task", id }],
     }),
-    deleteTask: builder.mutation<any, { id: string }>({
+    deleteTask: builder.mutation<DeleteTaskResponse, { id: string }>({
       query: (variables) => ({
         document: `
-          mutation DeleteTask($id: String!) {
+          mutation DeleteTask($id: ID!) {
             deleteTask(id: $id)
           }
         `,
         variables,
       }),
-      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Task", id },
+        { type: "Task", id: "LIST" },
+      ],
     }),
   }),
 });

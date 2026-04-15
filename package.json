@@ -15,5 +15,12 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.5.0",
+    "@as-integrations/express5": "^1.1.2",
+    "@nestjs/apollo": "^13.2.5",
+    "@nestjs/graphql": "^13.2.5",
+    "graphql": "^16.13.2"
   }
 }

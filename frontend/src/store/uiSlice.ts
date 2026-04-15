@@ -1,10 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  status: "TODO" | "IN_PROGRESS" | "DONE";
+  createdAt: string;
 }
 
 interface UiState {
@@ -18,7 +19,7 @@ const initialState: UiState = {
 };
 
 export const uiSlice = createSlice({
-  name: 'ui',
+  name: "ui",
   initialState,
   reducers: {
     openModal: (state, action: PayloadAction<Task | null>) => {

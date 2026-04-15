@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './store/store';
+import type { RootState } from './store/store';
 import { openModal } from './store/uiSlice';
 import TaskBoard from './components/TaskBoard';
 import TaskFormModal from './components/TaskFormModal';
